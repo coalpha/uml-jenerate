@@ -2,7 +2,7 @@ import java.util.*;
 import static java.lang.System.*;
 
 interface Chooser {
-   static <T> T choose(T[] choices) {
+   static <T> T choose(final T[] choices) {
       var sc = new Scanner(System.in);
 
       var i = 0;

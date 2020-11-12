@@ -28,4 +28,3 @@ clean:
 
 .PHONY: default build-all run~% noop~%
 .SECONDARY:
-# .PRECIOUS: %.class

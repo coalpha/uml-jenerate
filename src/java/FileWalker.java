@@ -10,7 +10,7 @@ interface FileWalker {
       return (
          trycatch(() -> Files.walk(abspath)
             .filter(Files::isRegularFile)
-            .map(f -> f.toString())
+            .map(f -> f.getFileName().toString())
             .filter(f -> f.endsWith(".class"))
             .toArray(String[]::new)
          ).unwrap_or(new String[]{})
