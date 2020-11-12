@@ -1,5 +1,7 @@
 import java.nio.file.*;
 
+import java.util.StringJoiner;
+
 class Main {
    private static String basename(String s) {
       return s.substring(0, s.lastIndexOf('.'));
@@ -27,15 +29,12 @@ class Main {
          }
 
          var clazz = clazz_r.unwrap();
-         try {
-            var main = clazz.getMethod("main", String[].class);
-            Object args = new String[]{ classNameMaybe };
-            main.invoke(null, args);
-            return;
-         } catch (Exception e) {
-            e.printStackTrace();
-            continue;
+         var methods = clazz.getDeclaredMethods();
+         for (var method : methods) {
+            System.out.println(fmt.str(method));
          }
+         // var fields = clazz.getDeclaredFields();
+         // fields[0]
       }
    }
 }

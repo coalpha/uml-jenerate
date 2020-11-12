@@ -7,7 +7,7 @@ import opre.Result;
 import static opre.Result.*;
 
 class Loader {
-   public final URLClassLoader loader;
+   final URLClassLoader loader;
 
    static URL[] convertPaths(final Path[] paths) {
       return (

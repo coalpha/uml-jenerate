@@ -15,7 +15,7 @@ default:
 
 $(OUT_DIR)/%.class: $(IN_DIR)/%.java
 	@echo ----- MAK $< -----
-	@javac $(JAVAC_ARGS) $<
+	@-javac $(JAVAC_ARGS) $<
 
 run~%: $(artifacts)
 	$(eval J=$(notdir $(patsubst run~%,%,$@)))
