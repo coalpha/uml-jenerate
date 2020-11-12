@@ -5,20 +5,25 @@ import static java.lang.reflect.Modifier.*;
 
 interface fmt {
    /** "borrowed" from OpenJDK */
-   static String str(int mod) {
-      var sj = new StringJoiner(" ");
-
+   static char viz(int mod) {
       if ((mod & PUBLIC) != 0) {
-         sj.add("+");
+         return '+';
       } else
       if ((mod & PROTECTED) != 0) {
-         sj.add("#");
+         return '#';
       } else
       if ((mod & PRIVATE) != 0) {
-         sj.add("-");
+         return '-';
       } else {
-         sj.add("~");
+         return '~';
       }
+   }
+
+   static String str(final int mod) {
+      var sb = new StringBuilder(16);
+      var sj = new StringJoiner(" ");
+
+      sb.append(viz(mod));
 
       if ((mod & ABSTRACT) != 0)      sj.add("abstract");
       if ((mod & STATIC) != 0)        sj.add("static");
@@ -29,7 +34,14 @@ interface fmt {
       if ((mod & NATIVE) != 0)        sj.add("native");
       if ((mod & STRICT) != 0)        sj.add("strictfp");
       if ((mod & INTERFACE) != 0)     sj.add("interface");
-      return sj.toString();
+
+      if (sj.length() > 0) {
+         sb
+            .append(sj)
+            .append(' ');
+      }
+
+      return sb.toString();
    }
 
    static String str(final Class<?> type) {
@@ -45,15 +57,16 @@ interface fmt {
       sb
          .append(p.getName())
          .append(": ")
+         // most uml does not include this
+         // .append(str(p.getModifiers()))
          .append(str(p.getType()));
       return sb.toString();
    }
 
    static String str(final Method m) {
-      var sb = new StringBuilder(80);
+      var sb = new StringBuilder(128);
       sb
          .append(str(m.getModifiers()))
-         .append(' ')
          .append(m.getName())
          .append('(');
       var sj = new StringJoiner(", ");
@@ -64,6 +77,16 @@ interface fmt {
          .append(sj)
          .append("): ")
          .append(str(m.getReturnType()));
+      return sb.toString();
+   }
+
+   static String str(final Field f) {
+      var sb = new StringBuilder(64);
+      sb
+         .append(str(f.getModifiers()))
+         .append(f.getName())
+         .append(": ")
+         .append(str(f.getType()));
       return sb.toString();
    }
 }

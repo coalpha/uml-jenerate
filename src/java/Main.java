@@ -1,7 +1,5 @@
 import java.nio.file.*;
 
-import java.util.StringJoiner;
-
 class Main {
    private static String basename(String s) {
       return s.substring(0, s.lastIndexOf('.'));
@@ -29,11 +27,21 @@ class Main {
          }
 
          var clazz = clazz_r.unwrap();
+         var fields = clazz.getDeclaredFields();
+
+         System.out.println("fields:");
+         for (var field : fields) {
+            System.out.println(fmt.str(field));
+         }
+
+         System.out.println("methods:");
          var methods = clazz.getDeclaredMethods();
          for (var method : methods) {
+            if (method.getName().startsWith("lambda$")) {
+               continue;
+            }
             System.out.println(fmt.str(method));
          }
-         // var fields = clazz.getDeclaredFields();
          // fields[0]
       }
    }

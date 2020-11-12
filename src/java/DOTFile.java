@@ -3,6 +3,4 @@ public class DOTFile {
       + "digraph UML {\n"
       + "node [\nfontname=\"Bitstream Vera Sans\"\nfontsize=8\nshape=record\n]"
    );
-
-   
 }
