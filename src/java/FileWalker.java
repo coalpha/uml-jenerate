@@ -1,19 +1,31 @@
+import java.util.*;
 import java.nio.file.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static opre.Result.*;
 
-interface FileWalker {
-   static Stream<String> walk(final Path where, final String type) {
-      final var abspath = where.toAbsolutePath();
-      System.out.println("Searching for ." + type + " files in " + abspath);
+class FileWalker {
+   final List<Path> filesFound;
+   final List<Path> parents;
 
-      return (
-         trycatch(() -> Files.walk(abspath)
+   FileWalker(final Path where, final String type) {
+      final var path = util.realpath(where);
+      System.out.println("Searching for ." + type + " files in " + path);
+
+      filesFound = (
+         trycatch(() -> Files.walk(path))
+            .unwrap_or(Stream.empty())
             .filter(Files::isRegularFile)
-            .map(f -> f.getFileName().toString())
-            .filter(f -> f.endsWith(".class"))
-         ).unwrap_or(Stream.empty())
+            .filter(f -> f.toString().endsWith(".class"))
+            .collect(Collectors.toUnmodifiableList())
+      );
+
+      parents = (
+         filesFound
+            .stream()
+            .map(f -> f.getParent())
+            .collect(Collectors.toUnmodifiableList())
       );
    }
 }

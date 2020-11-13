@@ -17,18 +17,18 @@ class InnerNode extends Node {
       if (fields.length != 0) {
          sb.append("      |\n");
       }
-      for (var field : fields) {
+      for (final var field : fields) {
          sb
             .append("      ")
             .append(fmt.str(field))
             .append("\\l\n");
       }
 
-      final var methods = clazz.getDeclaredMethods();
+      final var methods = super.clazz.getDeclaredMethods();
       if (methods.length != 0) {
          sb.append("      |\n");
       }
-      for (var method : methods) {
+      for (final var method : methods) {
          if (method.getName().startsWith("lambda$")) {
             continue;
          }

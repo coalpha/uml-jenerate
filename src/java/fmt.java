@@ -75,7 +75,7 @@ interface fmt {
          .append(m.getName())
          .append('(');
       final var sj = new StringJoiner(", ");
-      for (var param : m.getParameters()) {
+      for (final var param : m.getParameters()) {
          sj.add(str(param));
       }
       sb

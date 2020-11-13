@@ -2,7 +2,9 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 abstract class Node {
-   Class<?> clazz;
+   static boolean eq(final Node a, final Node b) {
+      return a.clazz.equals(b.clazz);
+   };
 
    static boolean good_class(final Node node) {
       if (node.clazz == null) {
@@ -15,6 +17,8 @@ abstract class Node {
 
       return true;
    }
+
+   Class<?> clazz;
 
    String name() {
       return fmt.str(this.clazz);
@@ -32,18 +36,4 @@ abstract class Node {
 
    @Override
    public abstract String toString();
-
-   @Override
-   public boolean equals(final Object obj) {
-      if (obj == this) {
-         return true;
-      }
-
-      if (obj instanceof Node) {
-         Node node = (Node) obj;
-         return this.clazz.equals(node.clazz);
-      }
-
-      return false;
-   };
 }

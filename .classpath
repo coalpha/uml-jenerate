@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/java" output="bin/java"/>
-	<classpathentry kind="lib" path="lib/opre.jar"/>
+	<classpathentry kind="src" output="bin/java" path="src/java"/>
+	<classpathentry kind="lib" path="lib/opre-v1.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

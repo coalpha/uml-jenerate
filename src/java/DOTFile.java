@@ -1,28 +1,26 @@
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-
-import opre.Result;
-import static opre.Result.*;
 
 class DOTFile {
    private final StringBuilder sb = new StringBuilder(0x1000);
    private final Path outfile;
 
    DOTFile(
-      final String filename,
+      final Path outfile,
       final String name,
       final Stream<Class<?>> classes
    ) {
-      outfile = Paths.get(filename);
+      this.outfile = outfile;
       this.sb
          .append("digraph ")
          .append(name)
          .append(" {\n")
          .append("   node [\n")
          .append("      fontname=\"Bitstream Vera Sans\"\n")
-         .append("      fontsize=8\n")
+         .append("      fontsize=14\n")
          .append("      shape=record\n")
          .append("   ]\n");
 
@@ -46,21 +44,7 @@ class DOTFile {
             .toArray(Node[]::new)
       );
 
-      final var allNodesLen = allNodes.length;
-      final var combinedNodes = new ArrayList<Node>(allNodesLen);
-
-      // dedupe leaving things at the back
-      first:
-      for (var i = 0; i < allNodesLen; i++) {
-         var first = allNodes[i];
-         for (var j = i + 1; j < allNodesLen; j++) {
-            var second = allNodes[j];
-            if (first.equals(second)) {
-               continue first;
-            }
-         }
-         combinedNodes.add(first);
-      }
+      final var combinedNodes = Dedupe.dedupe_right(allNodes, Node::eq);
 
       for (final var node : combinedNodes) {
          sb
@@ -69,7 +53,7 @@ class DOTFile {
       }
 
       for (final var first : combinedNodes) {
-         var refd = first.referenced().toArray(Class<?>[]::new);
+         final var refd = first.referenced().toArray(Class<?>[]::new);
 
          for (final var second : combinedNodes) {
             for (final var ref : refd) {
@@ -86,8 +70,8 @@ class DOTFile {
       }
    }
 
-   void write() {
-      sb.append('}');
-      ignore(() -> Files.write(this.outfile, sb.toString().getBytes()));
+   void write() throws IOException {
+      sb.append("}\n");
+      Files.write(this.outfile, sb.toString().getBytes());
    }
 }

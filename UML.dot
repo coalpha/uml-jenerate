@@ -1,15 +1,16 @@
 digraph UML {
    node [
       fontname="Bitstream Vera Sans"
-      fontsize=8
+      fontsize=14
       shape=record
    ]
 
-   "Chooser" [
+   "Dedupe" [
       label="{
-         Chooser
+         Dedupe
          |
-         +static choose(choices: Object[]): Object\l
+         +static dedupe_right(ary: Object[]): List\l
+         +static dedupe_right(ary: Object[], eq: BiPredicate): List\l
       }"
    ]
 
@@ -28,7 +29,9 @@ digraph UML {
       label="{
          FileWalker
          |
-         +static walk(where: Path, type: String): Stream\l
+         ~final filesFound: List\l
+         ~final parents: List\l
+         |
       }"
    ]
 
@@ -57,10 +60,10 @@ digraph UML {
       label="{
          Loader
          |
-         ~final loader: URLClassLoader\l
+         -final loader: URLClassLoader\l
          |
          ~load(className: String): Result\l
-         ~static transient convertPaths(paths: Path[]): URL[]\l
+         ~static convertPaths(paths: Stream): URL[]\l
       }"
    ]
 
@@ -69,7 +72,6 @@ digraph UML {
          Main
          |
          +static main(args: String[]): void\l
-         -static basename(s: String): String\l
       }"
    ]
 
@@ -80,10 +82,10 @@ digraph UML {
          ~clazz: Class\l
          |
          ~name(): String\l
-         +equals(obj: Object): boolean\l
          +abstract toString(): String\l
-         ~referenced(): Stream\l
+         ~static eq(a: Node, b: Node): boolean\l
          ~dot_symbol(): String\l
+         ~referenced(): Stream\l
          ~static good_class(node: Node): boolean\l
       }"
    ]
@@ -93,6 +95,20 @@ digraph UML {
          OuterNode
          |
          +toString(): String\l
+      }"
+   ]
+
+   "util" [
+      label="{
+         util
+         |
+         -static final sc: Scanner\l
+         |
+         ~static basename(s: String): String\l
+         ~static cancel(path: Path): boolean\l
+         ~static realpath(path: Path): Path\l
+         ~static dedupe_right(ary: Object[]): List\l
+         ~static dedupe_right(ary: Object[], eq: BiPredicate): List\l
       }"
    ]
    "Node" -> "InnerNode"
