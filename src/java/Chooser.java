@@ -3,11 +3,13 @@ import static java.lang.System.*;
 
 interface Chooser {
    static <T> T choose(final T[] choices) {
-      var sc = new Scanner(System.in);
+      final var sc = new Scanner(System.in);
+
+      out.println("----- CHOOSE -----");
+      final var len = choices.length;
+      final var fmt = "%" + Integer.toString(len).length() + "d: %s\n";
 
       var i = 0;
-      var len = choices.length;
-      var fmt = "%" + len + "d: %s\n";
       for (var choice : choices) {
          out.printf(fmt, i++, choice);
       }

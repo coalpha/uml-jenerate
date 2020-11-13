@@ -1,48 +1,25 @@
 import java.nio.file.*;
+import java.util.stream.Stream;
 
 class Main {
-   private static String basename(String s) {
+   private static String basename(final String s) {
       return s.substring(0, s.lastIndexOf('.'));
    }
-   public static void main(String a[]) {
-      var cwd = Paths.get(".");
-      var paths = FileWalker.walk(cwd, "class");
+   public static void main(final String args[]) {
+      final var cwd = Paths.get(".");
+      final var paths = FileWalker.walk(cwd, "class");
 
-      var classpath = Loader.convertPaths(new Path[]{cwd});
-      var loader = new Loader(classpath);
+      final var classpath = Loader.convertPaths(cwd);
+      final var loader = new Loader(classpath);
 
-      while (true) {
-         var choice = Chooser.choose(paths);
+      Stream<Class<?>> classes = (
+         paths
+            .map(Main::basename)
+            .map(loader::load)
+            .filter(r -> r.is_ok())
+            .map(r -> r.unwrap())
+      );
 
-         if (choice == null) {
-            // end the program
-            return;
-         }
-
-         var classNameMaybe = basename(choice);
-
-         var clazz_r = loader.load(classNameMaybe);
-         if (clazz_r.is_err()) {
-            continue;
-         }
-
-         var clazz = clazz_r.unwrap();
-         var fields = clazz.getDeclaredFields();
-
-         System.out.println("fields:");
-         for (var field : fields) {
-            System.out.println(fmt.str(field));
-         }
-
-         System.out.println("methods:");
-         var methods = clazz.getDeclaredMethods();
-         for (var method : methods) {
-            if (method.getName().startsWith("lambda$")) {
-               continue;
-            }
-            System.out.println(fmt.str(method));
-         }
-         // fields[0]
-      }
+      final var dotfile = new DOTFile("UML.dot", "uhhhh", classes);
    }
 }

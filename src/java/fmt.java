@@ -20,8 +20,8 @@ interface fmt {
    }
 
    static String str(final int mod) {
-      var sb = new StringBuilder(16);
-      var sj = new StringJoiner(" ");
+      final var sb = new StringBuilder(16);
+      final var sj = new StringJoiner(" ");
 
       sb.append(viz(mod));
 
@@ -45,7 +45,12 @@ interface fmt {
    }
 
    static String str(final Class<?> type) {
-      var sn = type.getSimpleName();
+      // because interfaces have a superclass that is null
+      if (type == null) {
+         return "";
+      }
+
+      final var sn = type.getSimpleName();
       if (sn == null) {
          return type.getCanonicalName();
       }
@@ -53,7 +58,7 @@ interface fmt {
    }
 
    static String str(final Parameter p) {
-      var sb = new StringBuilder(16);
+      final var sb = new StringBuilder(16);
       sb
          .append(p.getName())
          .append(": ")
@@ -64,12 +69,12 @@ interface fmt {
    }
 
    static String str(final Method m) {
-      var sb = new StringBuilder(128);
+      final var sb = new StringBuilder(128);
       sb
          .append(str(m.getModifiers()))
          .append(m.getName())
          .append('(');
-      var sj = new StringJoiner(", ");
+      final var sj = new StringJoiner(", ");
       for (var param : m.getParameters()) {
          sj.add(str(param));
       }
@@ -81,7 +86,7 @@ interface fmt {
    }
 
    static String str(final Field f) {
-      var sb = new StringBuilder(64);
+      final var sb = new StringBuilder(64);
       sb
          .append(str(f.getModifiers()))
          .append(f.getName())

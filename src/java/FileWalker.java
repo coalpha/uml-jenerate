@@ -1,10 +1,11 @@
 import java.nio.file.*;
+import java.util.stream.Stream;
 
 import static opre.Result.*;
 
 interface FileWalker {
-   static String[] walk(final Path where, final String type) {
-      var abspath = where.toAbsolutePath();
+   static Stream<String> walk(final Path where, final String type) {
+      final var abspath = where.toAbsolutePath();
       System.out.println("Searching for ." + type + " files in " + abspath);
 
       return (
@@ -12,8 +13,7 @@ interface FileWalker {
             .filter(Files::isRegularFile)
             .map(f -> f.getFileName().toString())
             .filter(f -> f.endsWith(".class"))
-            .toArray(String[]::new)
-         ).unwrap_or(new String[]{})
+         ).unwrap_or(Stream.empty())
       );
    }
 }

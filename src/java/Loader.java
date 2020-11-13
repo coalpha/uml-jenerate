@@ -9,7 +9,7 @@ import static opre.Result.*;
 class Loader {
    final URLClassLoader loader;
 
-   static URL[] convertPaths(final Path[] paths) {
+   static URL[] convertPaths(final Path ...paths) {
       return (
          Arrays.stream(paths)
             .map(p -> trycatch(() -> p.toUri().toURL()))
