@@ -19,14 +19,16 @@ class Loader {
    }
 
    Loader(final URL[] classpath) {
+      final var uniqclasspath = util.dedupe_right(classpath).toArray(new URL[0]);
       final var sb = new StringBuilder(0xFFF);
-      for (final var url : classpath) {
+      sb.append("classpath: ");
+      for (final var url : uniqclasspath) {
          sb
             .append(url)
             .append(';');
       }
       System.out.println(sb.toString());
-      this.loader = URLClassLoader.newInstance(classpath);
+      this.loader = URLClassLoader.newInstance(uniqclasspath);
    }
 
    Result<Class<?>, Throwable> load(final String className) {

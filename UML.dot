@@ -31,7 +31,6 @@ digraph UML {
          |
          ~final filesFound: List\l
          ~final parents: List\l
-         |
       }"
    ]
 
@@ -107,8 +106,9 @@ digraph UML {
          ~static basename(s: String): String\l
          ~static cancel(path: Path): boolean\l
          ~static realpath(path: Path): Path\l
-         ~static dedupe_right(ary: Object[]): List\l
+         ~static wslpath(path: Path): String\l
          ~static dedupe_right(ary: Object[], eq: BiPredicate): List\l
+         ~static dedupe_right(ary: Object[]): List\l
       }"
    ]
    "Node" -> "InnerNode"

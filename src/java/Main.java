@@ -1,3 +1,4 @@
+import opre.Result;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -10,9 +11,15 @@ class Main {
          return;
       }
 
-      final var root = Paths.get(args[0]);
-      final var dotpath = Paths.get(args[1]);
-      final var pngpath = Paths.get(args[2]);
+      final var root = util.realpath(Paths.get(args[0]));
+      final var dotpath = util.realpath(Paths.get(args[1]));
+      final var pngpath = util.realpath(Paths.get(args[2]));
+
+      out.println(""
+         + "<root>   = " + root + '\n'
+         + ".dot out = " + dotpath + '\n'
+         + ".png out = " + pngpath + '\n'
+      );
 
       final var walked = new FileWalker(root, "class");
       final var parents = (
@@ -37,15 +44,19 @@ class Main {
          return;
       }
       dotfile.write();
+      out.println("wrote " + dotpath);
 
       if (util.cancel(pngpath)) {
          return;
       }
-      Runtime.getRuntime().exec(new String[] {
+      final var graphviz = new ProcessBuilder(
          "wsl", "dot", "-Tpng", "-Gdpi=300",
-         "" + dotpath, "-o", "" + pngpath
-      });
+         util.wslpath(dotpath), "-o", util.wslpath(pngpath)
+      );
+      graphviz.inheritIO();
+      final var process = graphviz.start();
+      Result.ignore(() -> process.waitFor());
 
-      out.println("Done.");
+      out.println("wrote " + pngpath);
    }
 }

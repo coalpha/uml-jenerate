@@ -4,7 +4,7 @@ JAR_DIR := dist
 LIBS := opre-v1.0.0.jar
 LIBS_PATH := lib
 LIBS_JOINED := $(foreach lib,$(LIBS),;$(LIBS_PATH)/$(lib))
-NAME := uml-jenerate-v0.0.1
+NAME := uml-jenerate-v0.0.2
 
 src_files = $(wildcard $(IN_DIR)/*.java)
 src_names = $(src_files:$(IN_DIR)/%.java=%)

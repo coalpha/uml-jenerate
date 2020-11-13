@@ -44,7 +44,7 @@ class DOTFile {
             .toArray(Node[]::new)
       );
 
-      final var combinedNodes = Dedupe.dedupe_right(allNodes, Node::eq);
+      final var combinedNodes = util.dedupe_right(allNodes, Node::eq);
 
       for (final var node : combinedNodes) {
          sb

@@ -10,14 +10,11 @@ class FileWalker {
    final List<Path> parents;
 
    FileWalker(final Path where, final String type) {
-      final var path = util.realpath(where);
-      System.out.println("Searching for ." + type + " files in " + path);
-
       filesFound = (
-         trycatch(() -> Files.walk(path))
+         trycatch(() -> Files.walk(where))
             .unwrap_or(Stream.empty())
             .filter(Files::isRegularFile)
-            .filter(f -> f.toString().endsWith(".class"))
+            .filter(f -> f.toString().endsWith(type))
             .collect(Collectors.toUnmodifiableList())
       );
 

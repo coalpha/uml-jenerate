@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.lang.reflect.Method;
+
 class InnerNode extends Node {
    InnerNode(final Class<?> clazz) {
       super.clazz = clazz;
@@ -24,7 +27,12 @@ class InnerNode extends Node {
             .append("\\l\n");
       }
 
-      final var methods = super.clazz.getDeclaredMethods();
+      final var methods = (
+         Arrays.stream(super.clazz.getDeclaredMethods())
+            .filter(m -> !m.getName().startsWith("lambda$"))
+            .toArray(Method[]::new)
+      );
+
       if (methods.length != 0) {
          sb.append("      |\n");
       }

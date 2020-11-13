@@ -4,3 +4,6 @@
 after the fact?*
 
 ![](UML.png)
+
+I'm pretty sure this works on Windows only and I don't care enough to add
+support for anything else.
