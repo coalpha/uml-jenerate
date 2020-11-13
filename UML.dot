@@ -1,0 +1,100 @@
+digraph UML {
+   node [
+      fontname="Bitstream Vera Sans"
+      fontsize=8
+      shape=record
+   ]
+
+   "Chooser" [
+      label="{
+         Chooser
+         |
+         +static choose(choices: Object[]): Object\l
+      }"
+   ]
+
+   "DOTFile" [
+      label="{
+         DOTFile
+         |
+         -final sb: StringBuilder\l
+         -final outfile: Path\l
+         |
+         ~write(): void\l
+      }"
+   ]
+
+   "FileWalker" [
+      label="{
+         FileWalker
+         |
+         +static walk(where: Path, type: String): Stream\l
+      }"
+   ]
+
+   "fmt" [
+      label="{
+         fmt
+         |
+         +static str(m: Method): String\l
+         +static str(f: Field): String\l
+         +static str(type: Class): String\l
+         +static str(mod: int): String\l
+         +static str(p: Parameter): String\l
+         +static viz(mod: int): char\l
+      }"
+   ]
+
+   "InnerNode" [
+      label="{
+         InnerNode
+         |
+         +toString(): String\l
+      }"
+   ]
+
+   "Loader" [
+      label="{
+         Loader
+         |
+         ~final loader: URLClassLoader\l
+         |
+         ~load(className: String): Result\l
+         ~static transient convertPaths(paths: Path[]): URL[]\l
+      }"
+   ]
+
+   "Main" [
+      label="{
+         Main
+         |
+         +static main(args: String[]): void\l
+         -static basename(s: String): String\l
+      }"
+   ]
+
+   "Node" [
+      label="{
+         Node
+         |
+         ~clazz: Class\l
+         |
+         ~name(): String\l
+         +equals(obj: Object): boolean\l
+         +abstract toString(): String\l
+         ~referenced(): Stream\l
+         ~dot_symbol(): String\l
+         ~static good_class(node: Node): boolean\l
+      }"
+   ]
+
+   "OuterNode" [
+      label="{
+         OuterNode
+         |
+         +toString(): String\l
+      }"
+   ]
+   "Node" -> "InnerNode"
+   "Node" -> "OuterNode"
+}

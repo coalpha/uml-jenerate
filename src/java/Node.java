@@ -4,9 +4,29 @@ import java.util.stream.Stream;
 abstract class Node {
    Class<?> clazz;
 
+   static boolean good_class(final Node node) {
+      if (node.clazz == null) {
+         return false;
+      }
+
+      if (node.clazz.equals(Object.class)) {
+         return false;
+      }
+
+      return true;
+   }
+
+   String name() {
+      return fmt.str(this.clazz);
+   }
+
+   String dot_symbol() {
+      return '"' + this.name() + '"';
+   }
+
    Stream<Class<?>> referenced() {
-      final var superClazz = Stream.of(clazz.getSuperclass());
-      final var interfaces = Arrays.stream(clazz.getInterfaces());
+      final var superClazz = Stream.of(this.clazz.getSuperclass());
+      final var interfaces = Arrays.stream(this.clazz.getInterfaces());
       return Stream.concat(superClazz, interfaces);
    }
 

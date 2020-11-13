@@ -6,7 +6,7 @@ src_files = $(wildcard $(IN_DIR)/*.java)
 src_names = $(src_files:$(IN_DIR)/%.java=%)
 artifacts = $(src_names:%=$(OUT_DIR)/%.class)
 
-JAVAC_ARGS = -cp "$(IN_DIR);$(LIBS)" -d $(OUT_DIR) -parameters
+JAVAC_ARGS = -cp "$(IN_DIR);$(LIBS)" -d $(OUT_DIR) -g -parameters
 JAVA_ARGS  = -cp "$(OUT_DIR);$(LIBS)"
 
 default:

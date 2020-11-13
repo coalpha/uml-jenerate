@@ -20,6 +20,9 @@ class Main {
             .map(r -> r.unwrap())
       );
 
-      final var dotfile = new DOTFile("UML.dot", "uhhhh", classes);
+      final var dotfile = new DOTFile("UML.dot", "UML", classes);
+      dotfile.write();
+
+      process
    }
 }

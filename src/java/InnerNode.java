@@ -7,14 +7,16 @@ class InnerNode extends Node {
    public String toString() {
       final var sb = new StringBuilder(0xFF);
 
-      final var name = fmt.str(super.clazz);
       sb
-         .append(name)
+         .append(super.dot_symbol())
          .append(" [\n   label=\"{\n      ")
-         .append(name)
-         .append("\n      |\n");
+         .append(super.name())
+         .append('\n');
 
       final var fields = super.clazz.getDeclaredFields();
+      if (fields.length != 0) {
+         sb.append("      |\n");
+      }
       for (var field : fields) {
          sb
             .append("      ")
@@ -22,8 +24,10 @@ class InnerNode extends Node {
             .append("\\l\n");
       }
 
-      sb.append("      |\n");
       final var methods = clazz.getDeclaredMethods();
+      if (methods.length != 0) {
+         sb.append("      |\n");
+      }
       for (var method : methods) {
          if (method.getName().startsWith("lambda$")) {
             continue;

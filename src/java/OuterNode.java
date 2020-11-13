@@ -7,11 +7,10 @@ class OuterNode extends Node {
    public String toString() {
       final var sb = new StringBuilder(0xFF);
 
-      final var name = fmt.str(super.clazz);
       sb
-         .append(name)
+         .append(super.dot_symbol())
          .append(" [\n   label=\"{")
-         .append(name)
+         .append(super.name())
          .append("}\"\n]");
 
       return sb.toString();
