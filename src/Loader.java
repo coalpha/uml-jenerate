@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import opre.Result;
 import static opre.Result.*;
 
-class Loader {
+final class Loader {
    private final URLClassLoader loader;
 
    static URL[] convertPaths(final Stream<Path> paths) {

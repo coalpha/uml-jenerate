@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.lang.reflect.Method;
 
-class InnerNode extends Node {
+final class InnerNode extends Node {
    InnerNode(final Class<?> clazz) {
       super.clazz = clazz;
    }

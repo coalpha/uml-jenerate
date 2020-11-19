@@ -1,9 +1,10 @@
 import java.util.*;
 import java.nio.file.Path;
 import java.util.function.BiPredicate;
+
 import static opre.Result.*;
 
-class util {
+interface util {
    static String basename(final String s) {
       return s.substring(0, s.lastIndexOf('.'));
    }
@@ -16,7 +17,7 @@ class util {
    }
 
    static <T> List<T> dedupe_right(final T[] ary) {
-      return util.dedupe_right(ary, Objects::equals);
+      return util.dedupe_right(ary, Object::equals);
    }
 
    /**
@@ -41,7 +42,7 @@ class util {
       return out;
    }
 
-   private static final Scanner sc = new Scanner(System.in);
+   static final Scanner sc = new Scanner(System.in);
    static boolean cancel(final Path path) {
       var f = path.toFile();
       if (f.exists()) {

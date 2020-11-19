@@ -1,48 +1,51 @@
-IN_DIR := src/java
-OUT_DIR := bin/java
-JAR_DIR := dist
-LIBS := opre-v1.0.0.jar
-LIBS_PATH := lib
-LIBS_JOINED := $(foreach lib,$(LIBS),;$(LIBS_PATH)/$(lib))
-NAME := uml-jenerate-v0.0.2
+src  := src
+lib  := lib
+obj  := bin
+dist := dist
 
-src_files = $(wildcard $(IN_DIR)/*.java)
-src_names = $(src_files:$(IN_DIR)/%.java=%)
-artifacts = $(src_names:%=$(OUT_DIR)/%.class)
+name := uml-jenerate-v0.0.3
 
-JAVAC_ARGS = -cp "$(IN_DIR);$(LIBS_JOINED)" -d $(OUT_DIR) -g -parameters
-JAVA_ARGS  = -cp "$(OUT_DIR);$(LIBS_JOINED)"
-RUN_ARGS   = . UML.dot UML.png
+out := $(obj)/$(name)
+jar := $(name).jar
+
+classpathify = $(subst $(eval) ,;,$(wildcard $1))
+
+libs := $(wildcard $(lib)/*.jar)
+libs_decanted := $(libs:$(lib)/%.jar=$(obj)/%.decanted)
+
+src_files := $(wildcard $(src)/*.java)
+artifacts := $(src_files:$(src)/%.java=$(out)/%.class)
+
+javac_args := -cp "$(src);$(call classpathify,$(libs))" -d $(out) -g -parameters
+
+obj_dirs   = $(wildcard $(obj)/*)
+java_args  = -cp "$(call classpathify,$(obj_dirs))"
 
 default:
-	@echo src_files = $(src_files)
+	@echo libs = $(libs)
 	@echo Please choose a target
 
-jar: $(JAR_DIR)/$(NAME).jar $(foreach lib,$(LIBS),$(JAR_DIR)/$(lib))
+jar: $(jar)
 	
 
-$(OUT_DIR)/%.class: $(IN_DIR)/%.java
+$(obj)/%.decanted: $(lib)/%.jar
+	7z x -y -o$@ $<
+
+$(out)/%.class: $(src)/%.java
 	@echo ----- MAK $< -----
-	@-javac $(JAVAC_ARGS) $<
+	-javac $(javac_args) $<
 
-$(JAR_DIR):
-	@mkdir $@
+$(jar): $(artifacts)
+	jar cvfm $@ Manifest.txt$(foreach dir,$(obj_dirs), -C $(dir) .)
 
-$(JAR_DIR)/$(NAME).jar: dist $(artifacts)
-	jar cvfm $@ Manifest.txt -C $(OUT_DIR) .
-
-$(JAR_DIR)/%.jar:
-	$(eval L=$(patsubst $(JAR_DIR)/%,%,$@))
-	copy $(LIBS_PATH)\$(L) $(JAR_DIR)\$(L)
-
-run~%: $(artifacts)
+run~%: $(artifacts) $(libs_decanted)
 	$(eval J=$(notdir $(patsubst run~%,%,$@)))
 	@echo ----- RUN $(J) -----
-	@java $(JAVA_ARGS) $(J) $(RUN_ARGS)
+	java $(java_args) $(J)
 	@echo ----- END $(J) -----
 
 clean:
-	-rd /s /q "$(OUT_DIR)"
+	-rd /s /q "$(obj)"
 
 .PHONY: default jar run~% noop~%
 .SECONDARY:

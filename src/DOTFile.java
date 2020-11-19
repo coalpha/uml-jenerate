@@ -1,10 +1,9 @@
-import java.io.IOException;
 import java.nio.file.*;
+import java.io.IOException;
 import java.util.stream.Stream;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-class DOTFile {
+final class DOTFile {
    private final StringBuilder sb = new StringBuilder(0x1000);
    private final Path outfile;
 

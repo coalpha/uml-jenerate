@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import static opre.Result.*;
 
-class FileWalker {
+final class FileWalker {
    final List<Path> filesFound;
    final List<Path> parents;
 
