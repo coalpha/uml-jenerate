@@ -1,7 +1,9 @@
 import java.util.*;
 import java.nio.file.Path;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 
+import opre.Option;
 import static opre.Result.*;
 
 interface util {
@@ -43,16 +45,17 @@ interface util {
    }
 
    static final Scanner sc = new Scanner(System.in);
+   static String prompt(final String prompt) {
+      System.out.print(prompt + "\n> ");
+      return sc.nextLine();
+   }
+
    static boolean cancel(final Path path) {
       var f = path.toFile();
-      if (f.exists()) {
-         System.out.print("\n"
-            + path
-            + " already exists\nOverwrite? [y/N]\n> "
-         );
-         return !sc.nextLine().equals("y");
-      }
-      return false;
+      return f.exists() && !(
+         prompt("\n" + path + " already exists\nOverwrite? [y/N]")
+            .equals("y")
+      );
    }
 
    static String wslpath(final Path path) {
@@ -72,5 +75,14 @@ interface util {
       }
 
       return new String(cary);
+   }
+
+   static Stream<Path> allParents(final Path path) {
+      final var parent = path.getParent();
+      if (parent == null) {
+         return Stream.empty();
+      } else {
+         return Stream.concat(Stream.of(parent), allParents(parent));
+      }
    }
 }

@@ -3,6 +3,7 @@ import java.lang.reflect.Method;
 
 final class InnerNode extends Node {
    InnerNode(final Class<?> clazz) {
+      System.out.println("INNERNODE-" + fmt.str(clazz));
       super.clazz = clazz;
    }
 

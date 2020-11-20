@@ -21,7 +21,7 @@ final class FileWalker {
       parents = (
          filesFound
             .stream()
-            .map(f -> f.getParent())
+            .flatMap(util::allParents)
             .collect(Collectors.toUnmodifiableList())
       );
    }

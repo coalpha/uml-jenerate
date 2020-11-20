@@ -1,26 +1,45 @@
-import opre.Result;
+import opre.*;
+import static opre.Result.*;
 
+import java.io.File;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.stream.Stream;
 import static java.lang.System.*;
 
 final class cli {
-   cli(final String[] args) {
+   cli(String[] args) {
       if (args.length != 3) {
          err.println("usage: java -jar uml-jenerate.jar <root> <dot> <png>");
-         return;
+         out.println("Switching to interactive mode:");
+         args = new String[3];
+         args[0] = util.prompt("Root Directory:");
+         args[1] = util.prompt(".dot path (leave empty for temp file):");
+
+         if (args[1].isBlank()) {
+            final var temp = (
+               trycatch(() -> File.createTempFile("temp", ".dot"))
+                  .expect("Could not create temporary file")
+            );
+            temp.deleteOnExit();
+            temp.delete();
+            args[1] = temp.toString()
+         }
+
+         args[2] = util.prompt("png file output:");
       }
 
       final var root = util.realpath(Paths.get(args[0]));
-      final var dot_out = util.realpath(Paths.get(args[1]));
-      final var png_out = util.realpath(Paths.get(args[2]));
+      final var dot = util.realpath(Paths.get(args[1]));
+      final var png = util.realpath(Paths.get(args[2]));
 
       out.println(""
-         + "<root>   = " + root + '\n'
-         + ".dot out = " + dot_out + '\n'
-         + ".png out = " + png_out + '\n'
+         + " dir root = " + root + '\n'
+         + ".dot path = " + dot + '\n'
+         + ".png path = " + png + '\n'
       );
+
+      util.prompt("Press ctrl c to cancel");
 
       final var walked = new FileWalker(root, "class");
       final var parents = (
@@ -42,36 +61,38 @@ final class cli {
             .map(Result::unwrap)
       );
 
-      final var dotfile = new DOTFile(dot_out, "UML", classes);
-      if (util.cancel(dot_out)) {
+      final var dotfile = new DOTFile(dot, "UML", classes);
+      if (util.cancel(dot)) {
+         out.println("canceled");
          return;
       }
 
       try {
          dotfile.write();
       } catch (IOException e) {
-         err.println("cli: error writing to " + dot_out);
+         err.println("cli: error writing to " + dot);
          err.println(e);
       }
-      out.println("wrote " + dot_out);
+      out.println("wrote " + dot);
 
-      if (util.cancel(png_out)) {
+      if (util.cancel(png)) {
+         out.println("canceled");
          return;
       }
 
       final var graphviz = new ProcessBuilder(
          "wsl", "dot", "-Tpng", "-Gdpi=300",
-         util.wslpath(dot_out), "-o", util.wslpath(png_out)
+         util.wslpath(dot), "-o", util.wslpath(png)
       );
       graphviz.inheritIO();
       try {
          final var process = graphviz.start();
-         Result.ignore(process::waitFor);
+         process.waitFor();
       } catch (Throwable e) {
          err.println("cli: error in starting the graphviz process");
          err.println(e);
       }
 
-      out.println("wrote " + png_out);
+      out.println("wrote " + png);
    }
 }
