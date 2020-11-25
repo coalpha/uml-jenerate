@@ -14,10 +14,4 @@ Alternatively:
 ![](UML.png)
 
 I'm pretty sure this works on Windows only and I don't care enough to add
-support for anything else.
-
-Oops? Did I forget to mention that this loads the classes into a live
-unsandboxed JVM? Oopsie daisy, that's a nice way to run all the code in any
-static initializer.
-
-[click2die]()
+support for anything else. Probably wouldn't be too hard though.
