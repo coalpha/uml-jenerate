@@ -22,7 +22,6 @@ obj_dirs   = $(wildcard $(obj)/*)
 java_args  = -cp "$(call classpathify,$(obj_dirs))"
 
 default:
-	@echo libs = $(libs)
 	@echo Please choose a target
 
 jar: $(jar)

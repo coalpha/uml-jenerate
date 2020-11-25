@@ -1,38 +1,39 @@
-import java.util.stream.Stream;
-
 import java.net.*;
-import java.nio.file.Path;
+import java.util.*;
 
-import opre.Result;
-import static opre.Result.*;
+import static java.lang.System.*;
 
-final class Loader {
-   private final URLClassLoader loader;
-
-   static URL[] convertPaths(final Stream<Path> paths) {
+interface Loader {
+   static Class<?> load(final ClassFile c) {
       return (
-         paths
-            .map(p -> trycatch(() -> p.toUri().toURL()))
-            .map(r -> r.unwrap())
-            .toArray(URL[]::new)
+         c
+            .stream()
+            .filter(Objects::nonNull)
+            .map(Loader::load)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null)
       );
    }
 
-   Loader(final URL[] classpath) {
-      final var uniqclasspath = util.dedupe_right(classpath).toArray(new URL[0]);
-      final var sb = new StringBuilder(0xFFF);
-      sb.append("classpath: \n");
-      for (final var url : uniqclasspath) {
-         sb
-            .append(url)
-            .append('\n');
+   static Class<?> load(final AB_Entry e) {
+      final URL path;
+      try {
+         path = e.context.toUri().toURL();
+      } catch (Throwable t) {
+         err.println("ERR " + t.getMessage());
+         return null;
       }
-      System.out.println(sb.toString());
-      this.loader = URLClassLoader.newInstance(uniqclasspath);
-   }
 
-   Result<Class<?>, Throwable> load(final String className) {
-      System.out.println("load " + className);
-      return trycatch(() -> loader.loadClass(className));
+      final var classpath = new URL[]{path};
+      try (final var loader = new URLClassLoader(classpath)) {
+         out.println("TRY " + e);
+         final var clazz = loader.loadClass(e.className);
+         out.println("OKAY " + e);
+         return clazz;
+      } catch (Throwable t) {
+         err.println("ERR " + t.getMessage());
+         return null;
+      }
    }
 }

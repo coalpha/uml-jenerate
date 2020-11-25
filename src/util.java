@@ -3,7 +3,6 @@ import java.nio.file.Path;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
-import opre.Option;
 import static opre.Result.*;
 
 interface util {
