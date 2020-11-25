@@ -22,9 +22,7 @@ abstract class Node {
 
    Class<?> clazz;
 
-   String name() {
-      return fmt.str(this.clazz);
-   }
+   abstract String name();
 
    String dot_symbol() {
       return '"' + this.name() + '"';

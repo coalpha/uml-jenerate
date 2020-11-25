@@ -2,8 +2,16 @@ import java.util.Arrays;
 import java.lang.reflect.Method;
 
 final class InnerNode extends Node {
-   InnerNode(final Class<?> clazz) {
-      super.clazz = clazz;
+   final String name;
+
+   InnerNode(final LoadedClass lc) {
+      super.clazz = lc.clazz;
+      this.name = lc.how.className;
+   }
+
+   @Override
+   String name() {
+      return this.name;
    }
 
    @Override
@@ -13,7 +21,7 @@ final class InnerNode extends Node {
       sb
          .append(super.dot_symbol())
          .append(" [\n   label=\"{\n      ")
-         .append(super.name())
+         .append(this.name())
          .append('\n');
 
       final var fields = super.fields();

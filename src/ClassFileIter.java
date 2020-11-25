@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-class ClassFileIter implements Iterator<AB_Entry> {
+final class ClassFileIter implements Iterator<AB_Entry> {
    private int cursor;
    private final ClassFile underlaying;
 

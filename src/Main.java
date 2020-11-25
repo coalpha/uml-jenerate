@@ -42,7 +42,7 @@ interface Main {
 
       final var classes = (
          ClassFiles.classes(root)
-            .<Class<?>>map(Loader::load)
+            .<LoadedClass>map(Loader::load)
             .filter(Objects::nonNull)
             .collect(Collectors.toUnmodifiableList())
       );

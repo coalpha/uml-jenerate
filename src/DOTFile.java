@@ -10,7 +10,7 @@ final class DOTFile {
    DOTFile(
       final Path outfile,
       final String name,
-      final Stream<Class<?>> classes
+      final Stream<LoadedClass> classes
    ) {
       this.outfile = outfile;
       this.sb
