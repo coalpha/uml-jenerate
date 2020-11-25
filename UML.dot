@@ -5,12 +5,59 @@ digraph UML {
       shape=record
    ]
 
-   "Dedupe" [
+   "Iterable" [
+      label="{Iterable}"
+   ]
+
+   "Iterator" [
+      label="{Iterator}"
+   ]
+
+   "AB_Entry" [
       label="{
-         Dedupe
+         AB_Entry
          |
-         +static dedupe_right(ary: Object[]): List\l
-         +static dedupe_right(ary: Object[], eq: BiPredicate): List\l
+         ~final context: Path\l
+         ~final className: String\l
+         |
+         +toString(): String\l
+      }"
+   ]
+
+   "ClassFile" [
+      label="{
+         ClassFile
+         |
+         ~final path: Path\l
+         ~final nameCount: int\l
+         |
+         +toString(): String\l
+         +iterator(): Iterator\l
+         ~stream(): Stream\l
+         +spliterator(): Spliterator\l
+         ~static make(p: Path): ClassFile\l
+         ~chopAt(idx: int): AB_Entry\l
+      }"
+   ]
+
+   "ClassFileIter" [
+      label="{
+         ClassFileIter
+         |
+         -cursor: int\l
+         -final underlaying: ClassFile\l
+         |
+         +hasNext(): boolean\l
+         +volatile next(): Object\l
+         +next(): AB_Entry\l
+      }"
+   ]
+
+   "ClassFiles" [
+      label="{
+         ClassFiles
+         |
+         +static classes(where: Path): Stream\l
       }"
    ]
 
@@ -22,15 +69,6 @@ digraph UML {
          -final outfile: Path\l
          |
          ~write(): void\l
-      }"
-   ]
-
-   "FileWalker" [
-      label="{
-         FileWalker
-         |
-         ~final filesFound: List\l
-         ~final parents: List\l
       }"
    ]
 
@@ -51,7 +89,19 @@ digraph UML {
       label="{
          InnerNode
          |
+         ~final name: String\l
+         |
+         ~name(): String\l
          +toString(): String\l
+      }"
+   ]
+
+   "LoadedClass" [
+      label="{
+         LoadedClass
+         |
+         ~final how: AB_Entry\l
+         ~final clazz: Class\l
       }"
    ]
 
@@ -59,10 +109,8 @@ digraph UML {
       label="{
          Loader
          |
-         -final loader: URLClassLoader\l
-         |
-         ~load(className: String): Result\l
-         ~static convertPaths(paths: Stream): URL[]\l
+         +static load(classfile: ClassFile): LoadedClass\l
+         +static load(e: AB_Entry): LoadedClass\l
       }"
    ]
 
@@ -80,12 +128,14 @@ digraph UML {
          |
          ~clazz: Class\l
          |
-         ~name(): String\l
+         ~abstract name(): String\l
          +abstract toString(): String\l
+         ~methods(): Method[]\l
+         ~fields(): Field[]\l
          ~static eq(a: Node, b: Node): boolean\l
-         ~dot_symbol(): String\l
-         ~referenced(): Stream\l
          ~static good_class(node: Node): boolean\l
+         ~referenced(): Stream\l
+         ~dot_symbol(): String\l
       }"
    ]
 
@@ -93,6 +143,7 @@ digraph UML {
       label="{
          OuterNode
          |
+         ~name(): String\l
          +toString(): String\l
       }"
    ]
@@ -101,16 +152,20 @@ digraph UML {
       label="{
          util
          |
-         -static final sc: Scanner\l
+         +static final sc: Scanner\l
          |
-         ~static basename(s: String): String\l
-         ~static cancel(path: Path): boolean\l
-         ~static realpath(path: Path): Path\l
-         ~static wslpath(path: Path): String\l
-         ~static dedupe_right(ary: Object[], eq: BiPredicate): List\l
-         ~static dedupe_right(ary: Object[]): List\l
+         +static basename(s: String): String\l
+         +static cancel(path: Path): boolean\l
+         +static wslpath(path: Path): String\l
+         +static prompt(prompt: String): String\l
+         +static realpath(path: Path): Path\l
+         +static dedupe_right(ary: Object[]): List\l
+         +static dedupe_right(ary: Object[], eq: BiPredicate): List\l
+         +static allParents(path: Path): Stream\l
       }"
    ]
+   "Iterable" -> "ClassFile"
+   "Iterator" -> "ClassFileIter"
    "Node" -> "InnerNode"
    "Node" -> "OuterNode"
 }
