@@ -4,16 +4,23 @@ import java.util.*;
 import static java.lang.System.*;
 
 interface Loader {
-   static Class<?> load(final ClassFile c) {
-      return (
-         c
+   static Class<?> load(final ClassFile classfile) {
+      final var maybeClass = (
+         classfile
             .stream()
             .filter(Objects::nonNull)
-            .map(Loader::load)
+            .<Class<?>>map(Loader::load)
             .filter(Objects::nonNull)
             .findFirst()
-            .orElse(null)
       );
+
+      if (maybeClass.isEmpty()) {
+         out.println("load bad " + classfile);
+      } else {
+         out.println("load ok  " + classfile);
+      }
+
+      return maybeClass.orElse(null);
    }
 
    static Class<?> load(final AB_Entry e) {
@@ -21,18 +28,13 @@ interface Loader {
       try {
          path = e.context.toUri().toURL();
       } catch (Throwable t) {
-         err.println("ERR " + t.getMessage());
          return null;
       }
 
       final var classpath = new URL[]{path};
       try (final var loader = new URLClassLoader(classpath)) {
-         out.println("TRY " + e);
-         final var clazz = loader.loadClass(e.className);
-         out.println("OKAY " + e);
-         return clazz;
+         return loader.loadClass(e.className);
       } catch (Throwable t) {
-         err.println("ERR " + t.getMessage());
          return null;
       }
    }

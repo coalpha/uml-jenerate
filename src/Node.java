@@ -1,6 +1,8 @@
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import java.lang.reflect.*;
+
 abstract class Node {
    static boolean eq(final Node a, final Node b) {
       return a.clazz.equals(b.clazz);
@@ -26,6 +28,22 @@ abstract class Node {
 
    String dot_symbol() {
       return '"' + this.name() + '"';
+   }
+
+   Field[] fields() {
+      try {
+         return this.clazz.getDeclaredFields();
+      } catch (NoClassDefFoundError e) {
+         return new Field[0];
+      }
+   }
+
+   Method[] methods() {
+      try {
+         return this.clazz.getDeclaredMethods();
+      } catch (NoClassDefFoundError e) {
+         return new Method[0];
+      }
    }
 
    Stream<Class<?>> referenced() {

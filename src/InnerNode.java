@@ -3,7 +3,6 @@ import java.lang.reflect.Method;
 
 final class InnerNode extends Node {
    InnerNode(final Class<?> clazz) {
-      System.out.println("INNERNODE-" + fmt.str(clazz));
       super.clazz = clazz;
    }
 
@@ -17,7 +16,7 @@ final class InnerNode extends Node {
          .append(super.name())
          .append('\n');
 
-      final var fields = super.clazz.getDeclaredFields();
+      final var fields = super.fields();
       if (fields.length != 0) {
          sb.append("      |\n");
       }
@@ -29,7 +28,7 @@ final class InnerNode extends Node {
       }
 
       final var methods = (
-         Arrays.stream(super.clazz.getDeclaredMethods())
+         Arrays.stream(super.methods())
             .filter(m -> !m.getName().startsWith("lambda$"))
             .toArray(Method[]::new)
       );

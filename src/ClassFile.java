@@ -21,7 +21,10 @@ final class ClassFile implements Iterable<AB_Entry> {
    }
 
    AB_Entry chopAt(final int idx) {
-      final var left = this.path.subpath(0, idx);
+      // BUG:
+      // On windows, Path#subpath(0) does not include the drive
+      // @see https://stackoverflow.com/questions/49118306/
+      final var left = this.path.getRoot().resolve(this.path.subpath(0, idx));
 
       final var right = this.path.subpath(idx, this.nameCount);
       final var len = right.getNameCount();

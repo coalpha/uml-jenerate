@@ -1,13 +1,10 @@
-import opre.*;
 import static opre.Result.*;
 
-import java.io.File;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.nio.file.*;
-import java.io.IOException;
-import java.util.stream.Stream;
 import static java.lang.System.*;
-
-import java.util.Objects;
 
 interface Main {
    static void main(String[] args) {
@@ -45,43 +42,45 @@ interface Main {
 
       final var classes = (
          ClassFiles.classes(root)
-            .map(Loader::load)
+            .<Class<?>>map(Loader::load)
             .filter(Objects::nonNull)
-            .toArray(Class<?>[]::new)
+            .collect(Collectors.toUnmodifiableList())
       );
 
-      // final var dotfile = new DOTFile(dot, "UML", classes);
-      // if (util.cancel(dot)) {
-      //    out.println("canceled");
-      //    return;
-      // }
+      out.println("Finished loading classes");
 
-      // try {
-      //    dotfile.write();
-      // } catch (IOException e) {
-      //    err.println("cli: error writing to " + dot);
-      //    err.println(e);
-      // }
-      // out.println("wrote " + dot);
+      final var dotfile = new DOTFile(dot, "UML", classes.stream());
+      if (util.cancel(dot)) {
+         out.println("canceled");
+         return;
+      }
 
-      // if (util.cancel(png)) {
-      //    out.println("canceled");
-      //    return;
-      // }
+      try {
+         dotfile.write();
+      } catch (IOException e) {
+         err.println("cli: error writing to " + dot);
+         err.println(e);
+      }
+      out.println("wrote " + dot);
 
-      // final var graphviz = new ProcessBuilder(
-      //    "wsl", "dot", "-Tpng", "-Gdpi=300",
-      //    util.wslpath(dot), "-o", util.wslpath(png)
-      // );
-      // graphviz.inheritIO();
-      // try {
-      //    final var process = graphviz.start();
-      //    process.waitFor();
-      // } catch (Throwable e) {
-      //    err.println("cli: error in starting the graphviz process");
-      //    err.println(e);
-      // }
+      if (util.cancel(png)) {
+         out.println("canceled");
+         return;
+      }
 
-      // out.println("wrote " + png);
+      final var graphviz = new ProcessBuilder(
+         "wsl", "dot", "-Tpng", "-Gdpi=300",
+         util.wslpath(dot), "-o", util.wslpath(png)
+      );
+      graphviz.inheritIO();
+      try {
+         final var process = graphviz.start();
+         process.waitFor();
+      } catch (Throwable e) {
+         err.println("cli: error in starting the graphviz process");
+         err.println(e);
+      }
+
+      out.println("wrote " + png);
    }
 }
