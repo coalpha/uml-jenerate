@@ -3,8 +3,11 @@ import java.util.StringJoiner;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
+/**
+ * This is a collection of functions that're used for stringifying various
+ * Objects and other things.
+ */
 interface fmt {
-   /** "borrowed" from OpenJDK */
    static char viz(int mod) {
       if ((mod & PUBLIC) != 0) {
          return '+';
@@ -19,6 +22,7 @@ interface fmt {
       }
    }
 
+   /** "borrowed" from OpenJDK */
    static String str(final int mod) {
       final var sb = new StringBuilder(16);
       final var sj = new StringJoiner(" ");
