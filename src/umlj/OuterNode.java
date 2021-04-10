@@ -1,3 +1,5 @@
+package umlj;
+
 final class OuterNode extends Node {
    OuterNode(final Class<?> clazz) {
       super.clazz = clazz;

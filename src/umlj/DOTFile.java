@@ -1,3 +1,5 @@
+package umlj;
+
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -32,7 +34,7 @@ final class DOTFile {
       final var outerNodes = (
          innerNodes
             .stream()
-            .flatMap(node -> node.referenced())
+            .flatMap(Node::referenced)
             .map(OuterNode::new)
       );
 

@@ -1,3 +1,5 @@
+package umlj;
+
 import java.util.Iterator;
 
 /**

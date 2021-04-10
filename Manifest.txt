@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Created-By: 0.0.2 (Cole Gannon)
-Name: uml-generate
-Implementation-Title: uml-generate
-Implementation-Version: 0.0.2
-Implementation-Vendor: coalpha
-Class-Path: opre-v1.0.0.jar
-Main-Class: Main

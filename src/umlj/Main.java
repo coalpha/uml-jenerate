@@ -1,4 +1,4 @@
-import static opre.Result.*;
+package umlj;
 
 import java.io.*;
 import java.util.*;
@@ -16,13 +16,16 @@ interface Main {
          args[1] = util.prompt(".dot path (leave empty for temp file):");
 
          if (args[1].isBlank()) {
-            final var temp = (
-               trycatch(() -> File.createTempFile("temp", ".dot"))
-                  .expect("Could not create temporary file")
-            );
-            temp.deleteOnExit();
-            temp.delete();
-            args[1] = temp.toString();
+            try {
+               final var temp = File.createTempFile("temp", ".dot");
+               temp.deleteOnExit();
+               temp.delete();
+               args[1] = temp.toString();
+            } catch (IOException e) {
+               err.println("Could not create temporary file");
+               return;
+            }
+
          }
 
          args[2] = util.prompt("png file output:");
@@ -76,9 +79,10 @@ interface Main {
       try {
          final var process = graphviz.start();
          process.waitFor();
-      } catch (Throwable e) {
+      } catch (Throwable t) {
          err.println("cli: error in starting the graphviz process");
-         err.println(e);
+         t.printStackTrace();
+         return;
       }
 
       out.println("wrote " + png);

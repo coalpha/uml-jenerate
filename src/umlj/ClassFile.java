@@ -1,3 +1,5 @@
+package umlj;
+
 import java.util.*;
 import java.util.stream.*;
 import java.nio.file.*;

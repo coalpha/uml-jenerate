@@ -1,3 +1,5 @@
+package umlj;
+
 import java.net.*;
 import java.util.*;
 
@@ -27,7 +29,7 @@ interface Loader {
       final URL path;
       try {
          path = e.context.toUri().toURL();
-      } catch (Throwable t) {
+      } catch (MalformedURLException mue) {
          return null;
       }
 

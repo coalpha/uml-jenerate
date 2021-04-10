@@ -1,9 +1,10 @@
+package umlj;
+
 import java.util.*;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
-
-import static opre.Result.*;
 
 interface util {
    static String basename(final String s) {
@@ -11,10 +12,11 @@ interface util {
    }
 
    static Path realpath(final Path path) {
-      return (
-         trycatch(() -> path.toRealPath())
-            .unwrap_or_else(() -> path.toAbsolutePath())
-      );
+      try {
+         return path.toRealPath();
+      } catch (IOException e) {
+         return path.toAbsolutePath();
+      }
    }
 
    static <T> List<T> dedupe_right(final T[] ary) {

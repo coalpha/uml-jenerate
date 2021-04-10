@@ -1,3 +1,5 @@
+package umlj;
+
 // record LoadedClass
 final class LoadedClass {
    final AB_Entry how;
