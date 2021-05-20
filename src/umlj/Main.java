@@ -25,7 +25,6 @@ interface Main {
                err.println("Could not create temporary file");
                return;
             }
-
          }
 
          args[2] = util.prompt("png file output:");
